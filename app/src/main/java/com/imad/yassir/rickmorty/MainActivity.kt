@@ -11,6 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.CharacterListScreen
+import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.CharacterListState
+import com.imad.yassir.rickmorty.rick_morty.presentation.models.CharacterUi
 import com.imad.yassir.rickmorty.ui.theme.YassirRickMortyAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,28 +23,34 @@ class MainActivity : ComponentActivity() {
         setContent {
             YassirRickMortyAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+
+                    CharacterListScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        onSearchQueryChanged = { },
+                        state = CharacterListState(
+                            isLoading = false,
+                            characters = listOf(
+                                CharacterUi(
+                                    id = 1,
+                                    name = "Rick Sanchez",
+                                    species = "Human",
+                                    imageUrl = "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
+                                ),
+                                CharacterUi(
+                                    id = 2,
+                                    name = "Morty Smith",
+                                    species = "Human",
+                                    imageUrl = "https://rickandmortyapi.com/api/character/avatar/2.jpeg"
+                                ),
+
+                            )
+                        )
+
                     )
+
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    YassirRickMortyAppTheme {
-        Greeting("Android")
-    }
-}
