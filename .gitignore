@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+# Ignore buildConfig or sensitive values
+**/build.gradle.kts
