@@ -1,12 +1,18 @@
 package com.imad.yassir.rickmorty.rick_morty.presentation.character_list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -33,16 +39,16 @@ fun CharacterListScreen(
     onAction: (CharacterListAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val listState = rememberLazyListState()
+    val gridState = rememberLazyGridState()
+    val searchGridState = rememberLazyGridState()
 
-    // Scroll detection for pagination (only when not searching)
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo }
+    LaunchedEffect(gridState) {
+        snapshotFlow { gridState.layoutInfo.visibleItemsInfo }
             .collect { visibleItems ->
-                val totalItems = listState.layoutInfo.totalItemsCount
+                val totalItems = gridState.layoutInfo.totalItemsCount
                 val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
                 if (totalItems > 0 &&
-                    lastVisibleIndex >= totalItems - 3 && // Load when 3 items from end
+                    lastVisibleIndex >= totalItems - 3 &&
                     state.canLoadMore &&
                     !state.isLoadingMore &&
                     !state.isSearchMode) {
@@ -109,29 +115,31 @@ fun CharacterListScreen(
                         CircularProgressIndicator()
                     }
                 } else {
-                    // Show search results
-                    LazyColumn(
-                        state = listState,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        if (state.searchResults.isEmpty() && state.searchQuery.isNotEmpty()) {
-                            // No search results found (only show when we actually searched)
-                            item {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(32.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "No characters found for \"${state.searchQuery}\"",
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                            }
-                        } else {
-                            // Show search results
+                    // Show search results in grid
+                    if (state.searchResults.isEmpty() && state.searchQuery.isNotEmpty()) {
+                        // No search results found (only show when we actually searched)
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No characters found for \"${state.searchQuery}\"",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    } else {
+                        // Show search results in grid format
+                        LazyVerticalGrid(
+                            columns = GridCells.Adaptive(minSize = 150.dp),
+                            contentPadding = PaddingValues(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            state = searchGridState,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
                             items(state.searchResults) { character ->
                                 CharacterItem(
                                     character = character,
@@ -145,8 +153,12 @@ fun CharacterListScreen(
 
             // Normal mode - show all characters with pagination
             else -> {
-                LazyColumn(
-                    state = listState,
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 150.dp),
+                    contentPadding = PaddingValues(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    state = gridState,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(state.characters) { character ->

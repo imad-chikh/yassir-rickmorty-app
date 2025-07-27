@@ -1,6 +1,7 @@
 package com.imad.yassir.rickmorty.rick_morty.presentation.character_list.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,11 +29,12 @@ import com.imad.yassir.rickmorty.rick_morty.presentation.models.CharacterUi
 
 @Composable
 fun CharacterItem(character: CharacterUi,onClick : ()->Unit) {
-    Card (   modifier = Modifier
+    Card (   modifier = Modifier.clickable ( onClick=onClick )
         .padding(horizontal = 16.dp, vertical = 8.dp)
         .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(4.dp)){
-        Row(modifier = Modifier.padding(16.dp)) {
+        Row(
+            modifier = Modifier.padding(16.dp)) {
             val imageRequest = ImageRequest.Builder(LocalContext.current)
                 .data(character.imageUrl)
                 .crossfade(true)

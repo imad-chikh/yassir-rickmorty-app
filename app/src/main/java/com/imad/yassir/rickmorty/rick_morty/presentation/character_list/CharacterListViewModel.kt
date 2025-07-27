@@ -1,5 +1,6 @@
 package com.imad.yassir.rickmorty.rick_morty.presentation.character_list
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imad.yassir.rickmorty.core.domain.util.onError
@@ -48,9 +49,13 @@ class CharacterListViewModel(
             }
 
             is CharacterListAction.OnCharacterClick -> {
+                Log.d("CharacterListViewModel","------------------Hi-----------------")
                 viewModelScope.launch {
+                    Log.d("CharacterListViewModel","------------------Clicked on ${action.characterId}-----------------")
+
                     _events.send(CharacterListEvent.NavigateToCharacterDetail(action.characterId))
                 }
+
             }
         }
     }
