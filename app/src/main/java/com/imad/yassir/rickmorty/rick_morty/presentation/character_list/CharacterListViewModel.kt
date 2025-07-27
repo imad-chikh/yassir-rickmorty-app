@@ -53,7 +53,7 @@ class CharacterListViewModel(
                 viewModelScope.launch {
                     Log.d("CharacterListViewModel","------------------Clicked on ${action.characterId}-----------------")
 
-                    _events.send(CharacterListEvent.NavigateToCharacterDetail(action.characterId))
+                    _events.send(CharacterListEvent.NavigateToCharacterDetail(action.characterId,action.characterName,action.characterImage,action.characterStatus,action.characterSpecies))
                 }
 
             }

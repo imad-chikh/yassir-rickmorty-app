@@ -8,13 +8,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -31,9 +28,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.imad.yassir.rickmorty.R
 import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.components.CharacterItem
-import com.imad.yassir.rickmorty.rick_morty.presentation.models.CharacterUi
+
 
 @Composable
 fun CharacterListScreen(
@@ -53,16 +54,25 @@ fun CharacterListScreen(
                     lastVisibleIndex >= totalItems - 3 &&
                     state.canLoadMore &&
                     !state.isLoadingMore &&
-                    !state.isSearchMode) {
+                    !state.isSearchMode
+                ) {
                     onAction(CharacterListAction.LoadMoreCharacters)
                 }
             }
     }
 
+    val backgroundImagePainter =
+        painterResource(id = R.drawable.background)
+
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .paint(
+                painter = backgroundImagePainter,
+                contentScale = ContentScale.FillBounds
+            )
+
+//            .background(MaterialTheme.colorScheme.background)
             .padding(vertical = 16.dp)
     ) {
         // Search TextField
@@ -159,7 +169,17 @@ fun CharacterListScreen(
                             items(state.searchResults) { character ->
                                 CharacterItem(
                                     character = character,
-                                    onClick = { onAction(CharacterListAction.OnCharacterClick(character.id)) }
+                                    onClick = {
+                                        onAction(
+                                            CharacterListAction.OnCharacterClick(
+                                                character.id,
+                                                character.name,
+                                                character.imageUrl,
+                                                character.status,
+                                                character.species,
+                                            )
+                                        )
+                                    }
                                 )
                             }
                         }
@@ -180,7 +200,17 @@ fun CharacterListScreen(
                     items(state.characters) { character ->
                         CharacterItem(
                             character = character,
-                            onClick = { onAction(CharacterListAction.OnCharacterClick(character.id)) }
+                            onClick = {
+                                onAction(
+                                    CharacterListAction.OnCharacterClick(
+                                        character.id,
+                                        character.name,
+                                        character.imageUrl,
+                                        character.status,
+                                        character.species
+                                    )
+                                )
+                            }
                         )
                     }
 
