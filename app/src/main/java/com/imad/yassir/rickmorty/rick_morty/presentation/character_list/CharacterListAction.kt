@@ -6,6 +6,12 @@ sealed class CharacterListAction {
     data class SearchCharacters(val query: String) : CharacterListAction()
     object LoadMoreCharacters : CharacterListAction()
     object RefreshCharacters : CharacterListAction()
-    data class OnCharacterClick(val characterId: Int) : CharacterListAction()
+    data class OnCharacterClick(
+        val characterId: Int,
+        val characterName: String,
+        val characterImage: String,
+        val characterStatus: String,
+        val characterSpecies: String,
+    ) : CharacterListAction()
 
 }

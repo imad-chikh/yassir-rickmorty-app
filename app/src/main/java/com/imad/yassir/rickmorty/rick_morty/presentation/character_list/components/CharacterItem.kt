@@ -1,5 +1,6 @@
 package com.imad.yassir.rickmorty.rick_morty.presentation.character_list.components
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,11 +29,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -40,17 +43,16 @@ import coil.request.ImageRequest
 import com.imad.yassir.rickmorty.R
 import com.imad.yassir.rickmorty.rick_morty.presentation.models.CharacterUi
 
-// Extracted colors from the Rick and Morty card image
-val CardCyanGlow = Color(0xFF00E5FF)        // Bright cyan glow border
-val CardCyanDark = Color(0xFF00ACC1)        // Darker cyan for accents
-val CardBackground = Color(0xFF1A1A1A)      // Dark card background
-val CardSurface = Color(0xFF2D2D2D)         // Card surface/content area
-val StatusGreen = Color(0xFF4CAF50)         // Green status indicator
-val StatusRed = Color(0xFFFF5252)           // Red status indicator (for dead)
-val StatusYellow = Color(0xFFFFEB3B)        // Yellow status indicator (for unknown)
-val TextPrimary = Color(0xFFFFFFFF)         // White text
-val TextSecondary = Color(0xFFB0BEC5)       // Light grey secondary text
-val IconTint = Color(0xFF00E5FF)            // Cyan icon tint
+val CardCyanGlow = Color(0xFF00E5FF)
+val CardCyanDark = Color(0xFF00ACC1)
+val CardBackground = Color(0xFF17517e)
+val CardSurface = Color(0xFF17517e)
+val StatusGreen = Color(0xFF4CAF50)
+val StatusRed = Color(0xFFFF5252)
+val StatusYellow = Color(0xFFFFEB3B)
+val TextPrimary = Color(0xFFFFFFFF)
+val TextSecondary = Color(0xFFB0BEC5)
+val IconTint = Color(0xFF00E5FF)
 
 @Composable
 fun CharacterItem(character: CharacterUi, onClick: () -> Unit) {
@@ -122,7 +124,10 @@ fun CharacterItem(character: CharacterUi, onClick: () -> Unit) {
                         )
                         Text(
                             text = character.species,
-                            style = MaterialTheme.typography.bodySmall,
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                textDecoration = if (character.status == "Dead") TextDecoration.LineThrough else TextDecoration.None
+                            ),
+
                             color = TextSecondary,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -151,13 +156,7 @@ fun CharacterItem(character: CharacterUi, onClick: () -> Unit) {
 
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            // User/Character icon
-                            Icon(
-                                imageVector = Icons.Default.AccountCircle,
-                                contentDescription = "Character Profile",
-                                tint = IconTint,
-                                modifier = Modifier.size(20.dp)
-                            )
+
                         }
                     }
                 }
