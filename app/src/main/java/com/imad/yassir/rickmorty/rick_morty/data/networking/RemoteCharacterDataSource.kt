@@ -23,7 +23,14 @@ class RemoteCharacterDataSource(private val httpClient: HttpClient): CharacterDa
             .map { response -> response.results.map { it.toCharacter()} }
         }
 
-
+    override suspend fun searchCharacter(query: String): Result<List<Character>, NetworkError> {
+        return safeCall<CharacterResponseDto> {
+            httpClient.get(urlString = constructUrl("character?name=$query")
+            )}
+            .map { response -> response.results.map { it.toCharacter()} }
     }
+
+
+}
 
 

@@ -6,7 +6,9 @@ import com.imad.yassir.rickmorty.core.domain.util.onError
 import com.imad.yassir.rickmorty.core.domain.util.onSuccess
 import com.imad.yassir.rickmorty.rick_morty.domain.CharacterDataSource
 import com.imad.yassir.rickmorty.rick_morty.presentation.models.toCharacterUi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -32,16 +34,19 @@ class CharacterListViewModel(
 
 
     fun onAction(action: CharacterListAction) {
-        when(action) {
+        when (action) {
             is CharacterListAction.LoadMoreCharacters -> {
-         loadMoreCharacters()
+                loadMoreCharacters()
             }
+
             is CharacterListAction.SearchCharacters -> {
-  //TODO: implemetnt              searchCharacters(action.query)
+                searchCharacters(action.query)
             }
+
             is CharacterListAction.RefreshCharacters -> {
-          //TODO: implement      refreshCharacters()
+                //TODO: implement      refreshCharacters()
             }
+
             is CharacterListAction.OnCharacterClick -> {
                 viewModelScope.launch {
                     _events.send(CharacterListEvent.NavigateToCharacterDetail(action.characterId))
@@ -74,7 +79,7 @@ class CharacterListViewModel(
             .onError { error ->
                 _state.update { it.copy(isLoading = false) }
                 _events.send(CharacterListEvent.ShowError(error.toString()))
-        }
+            }
     }
 
     //load more characters for pagination
@@ -109,6 +114,60 @@ class CharacterListViewModel(
                         )
                     }
                     _events.send(CharacterListEvent.ShowError("Failed to load more: ${error}"))
+                }
+        }
+    }
+    // Search characters
+
+    private var searchJob: Job? = null
+
+    private fun searchCharacters(query: String) {
+        searchJob?.cancel()
+        _state.update {
+            it.copy(
+                searchQuery = query,
+                isSearchMode = query.isNotBlank()
+            )
+        }
+
+        if (query.isBlank()) {
+            // Return to normal mode, show all characters
+            _state.update {
+                it.copy(
+                    searchResults = emptyList(),
+                    isSearching = false
+                )
+            }
+            return
+        }
+
+        // Implement API search
+        searchJob =    viewModelScope.launch {
+            delay(300) // Debounce for 300ms
+
+            _state.update {
+                it.copy(isSearching = true)
+            }
+
+            charaterListDataSource
+                .searchCharacter(query)
+                .onSuccess { searchResults ->
+
+                    _state.update {
+                        it.copy(
+                            searchResults = searchResults.map { it.toCharacterUi() },
+                            isSearching = false
+                        )
+                    }
+                }
+                .onError { error ->
+                    _state.update {
+                        it.copy(
+                            isSearching = false,
+                            searchResults = emptyList()
+                        )
+                    }
+                    _events.send(CharacterListEvent.ShowError("Search for $query failed: ${error}"))
                 }
         }
     }
