@@ -27,7 +27,7 @@ import com.imad.yassir.rickmorty.R
 import com.imad.yassir.rickmorty.rick_morty.presentation.models.CharacterUi
 
 @Composable
-fun CharacterItem(character: CharacterUi) {
+fun CharacterItem(character: CharacterUi,onClick : ()->Unit) {
     Card (   modifier = Modifier
         .padding(horizontal = 16.dp, vertical = 8.dp)
         .fillMaxWidth(),
@@ -58,13 +58,3 @@ fun CharacterItem(character: CharacterUi) {
     
 }}
 
-@Preview
-@Composable
-private fun PreviewCharacterItem() {
-    CharacterItem(character =CharacterUi(
-        id = 1,
-        name = "Rick",
-        species = "Human",
-        imageUrl = "https://rickandmortyapi.com/api/character/avatar/2.jpeg"
-    ) )
-}

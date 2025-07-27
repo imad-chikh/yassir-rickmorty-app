@@ -32,12 +32,24 @@ class CharacterListViewModel(
 
 
     fun onAction(action: CharacterListAction) {
-//        when(action) {
-//            is CharacterListAction.LoadCharacters -> {
-//
-//            }
-//        }
+        when(action) {
+            is CharacterListAction.LoadMoreCharacters -> {
+         loadMoreCharacters()
+            }
+            is CharacterListAction.SearchCharacters -> {
+  //TODO: implemetnt              searchCharacters(action.query)
+            }
+            is CharacterListAction.RefreshCharacters -> {
+          //TODO: implement      refreshCharacters()
+            }
+            is CharacterListAction.OnCharacterClick -> {
+                viewModelScope.launch {
+                    _events.send(CharacterListEvent.NavigateToCharacterDetail(action.characterId))
+                }
+            }
+        }
     }
+
 
     //load character list
     private suspend fun loadCharacterList() {
@@ -50,7 +62,7 @@ class CharacterListViewModel(
         }
 
         charaterListDataSource
-            .getCharacters()
+            .getCharacters(1)
             .onSuccess { items ->
                 _state.update {
                     it.copy(
@@ -62,6 +74,42 @@ class CharacterListViewModel(
             .onError { error ->
                 _state.update { it.copy(isLoading = false) }
                 _events.send(CharacterListEvent.ShowError(error.toString()))
+        }
+    }
+
+    //load more characters for pagination
+    private fun loadMoreCharacters() {
+        val currentState = _state.value
+        if (currentState.isLoadingMore || !currentState.canLoadMore) return
+
+        viewModelScope.launch {
+            _state.update {
+                it.copy(isLoadingMore = true)
+            }
+
+            val nextPage = currentState.currentPage + 1
+
+            charaterListDataSource
+                .getCharacters(nextPage)
+                .onSuccess { newItems ->
+                    _state.update {
+                        it.copy(
+                            isLoadingMore = false,
+                            characters = it.characters + newItems.map { it.toCharacterUi() },
+                            currentPage = nextPage,
+                            canLoadMore = newItems.isNotEmpty()
+                        )
+                    }
+                }
+                .onError { error ->
+                    _state.update {
+                        it.copy(
+                            isLoadingMore = false,
+                            canLoadMore = false
+                        )
+                    }
+                    _events.send(CharacterListEvent.ShowError("Failed to load more: ${error}"))
+                }
         }
     }
 

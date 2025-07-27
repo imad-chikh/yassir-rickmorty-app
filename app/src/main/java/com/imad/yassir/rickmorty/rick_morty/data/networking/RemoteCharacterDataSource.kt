@@ -16,9 +16,9 @@ import io.ktor.client.request.get
 class RemoteCharacterDataSource(private val httpClient: HttpClient): CharacterDataSource{
 
     //get the list of characters
-    override suspend fun getCharacters(): Result<List<Character>, NetworkError> {
+    override suspend fun getCharacters(page:Int): Result<List<Character>, NetworkError> {
         return safeCall<CharacterResponseDto> {
-            httpClient.get(urlString = constructUrl("character?page=1")
+            httpClient.get(urlString = constructUrl("character?page=$page")
             )}
             .map { response -> response.results.map { it.toCharacter()} }
         }
