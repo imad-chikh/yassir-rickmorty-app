@@ -11,6 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.imad.yassir.rickmorty.core.navigation.AdaptiveNavigation
+import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.CharacterListScreen
+import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.CharacterListState
+import com.imad.yassir.rickmorty.rick_morty.presentation.models.CharacterUi
 import com.imad.yassir.rickmorty.ui.theme.YassirRickMortyAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,8 +24,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             YassirRickMortyAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    AdaptiveNavigation(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -30,18 +33,3 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    YassirRickMortyAppTheme {
-        Greeting("Android")
-    }
-}
