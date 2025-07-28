@@ -7,11 +7,7 @@ sealed class CharacterListAction {
     object LoadMoreCharacters : CharacterListAction()
     object RefreshCharacters : CharacterListAction()
     data class OnCharacterClick(
-        val characterId: Int,
-        val characterName: String,
-        val characterImage: String,
-        val characterStatus: String,
-        val characterSpecies: String,
+        val characterId: Int
     ) : CharacterListAction()
 
 }

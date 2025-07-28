@@ -10,4 +10,6 @@ interface CharacterDataSource {
     suspend fun getCharacters(page: Int): Result<List<Character>, NetworkError>
 
     suspend fun searchCharacter(query: String): Result<List<Character>, NetworkError>
+
+    suspend fun getCharacterDetails(id: Int): Result<CharacterDetails, NetworkError>
 }

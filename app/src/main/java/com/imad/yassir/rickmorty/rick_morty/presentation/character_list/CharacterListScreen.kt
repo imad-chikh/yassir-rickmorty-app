@@ -172,11 +172,7 @@ fun CharacterListScreen(
                                     onClick = {
                                         onAction(
                                             CharacterListAction.OnCharacterClick(
-                                                character.id,
-                                                character.name,
-                                                character.imageUrl,
-                                                character.status,
-                                                character.species,
+                                                character.id
                                             )
                                         )
                                     }
@@ -203,11 +199,7 @@ fun CharacterListScreen(
                             onClick = {
                                 onAction(
                                     CharacterListAction.OnCharacterClick(
-                                        character.id,
-                                        character.name,
-                                        character.imageUrl,
-                                        character.status,
-                                        character.species
+                                        character.id
                                     )
                                 )
                             }

@@ -7,8 +7,11 @@ import com.imad.yassir.rickmorty.core.domain.util.NetworkError
 import com.imad.yassir.rickmorty.core.domain.util.Result
 import com.imad.yassir.rickmorty.core.domain.util.map
 import com.imad.yassir.rickmorty.rick_morty.data.mapper.toCharacter
+import com.imad.yassir.rickmorty.rick_morty.data.mapper.toCharacterDetails
 import com.imad.yassir.rickmorty.rick_morty.data.networking.dto.CharacterResponseDto
+import com.imad.yassir.rickmorty.rick_morty.data.networking.dto.CharacterDetailsDto
 import com.imad.yassir.rickmorty.rick_morty.domain.Character
+import com.imad.yassir.rickmorty.rick_morty.domain.CharacterDetails
 import com.imad.yassir.rickmorty.rick_morty.domain.CharacterDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -28,6 +31,13 @@ class RemoteCharacterDataSource(private val httpClient: HttpClient): CharacterDa
             httpClient.get(urlString = constructUrl("character?name=$query")
             )}
             .map { response -> response.results.map { it.toCharacter()} }
+    }
+
+    override suspend fun getCharacterDetails(id: Int): Result<CharacterDetails, NetworkError> {
+        return safeCall<CharacterDetailsDto> {
+            httpClient.get(urlString = constructUrl("character/$id"))
+        }
+        .map { response -> response.toCharacterDetails() }
     }
 
 
