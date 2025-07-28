@@ -8,8 +8,7 @@ A modern Rick and Morty character exploration app built using **Jetpack Compose*
 
 ## 🎥 Demo
 
-https://github.com/user-attachments/assets/8ee76281-6770-4d35-a2de-091a167b577f
-
+https://github.com/user-attachments/assets/97725c83-a3ca-410d-aeda-8f4c7982fde5
 ---
 
 ## 🚀 Features
