@@ -16,8 +16,7 @@ import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.Characte
 import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.CharacterListScreen
 import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.CharacterListViewModel
 import org.koin.androidx.compose.koinViewModel
-import java.net.URLDecoder
-import java.net.URLEncoder
+
 
 @Composable
 fun AdaptiveNavigation(
@@ -39,12 +38,7 @@ fun AdaptiveNavigation(
             }
 
             is CharacterListEvent.NavigateToCharacterDetail -> {
-                val encodedName = URLEncoder.encode(event.characterName, "UTF-8")
-                val encodedImage = URLEncoder.encode(event.characterImage, "UTF-8")
-                val encodedStatus = URLEncoder.encode(event.characterStatus, "UTF-8")
-                val encodedSpecies = URLEncoder.encode(event.characterSpecies, "UTF-8")
-
-                navController.navigate("character_detail/${event.characterId}/$encodedName/$encodedImage/$encodedStatus/$encodedSpecies")
+                navController.navigate("character_detail/${event.characterId}")
             }
 
             is CharacterListEvent.ShowToast -> {
@@ -69,27 +63,10 @@ fun AdaptiveNavigation(
             )
         }
 
-        composable("character_detail/{characterId}/{characterName}/{characterImage}/{characterStatus}/{characterSpecies}") { backStackEntry ->
+        composable("character_detail/{characterId}") { backStackEntry ->
             val characterId = backStackEntry.arguments?.getString("characterId")?.toIntOrNull() ?: 0
-            val characterName = backStackEntry.arguments?.getString("characterName")?.let {
-                URLDecoder.decode(it, "UTF-8")
-            } ?: ""
-            val characterImage = backStackEntry.arguments?.getString("characterImage")?.let {
-                URLDecoder.decode(it, "UTF-8")
-            } ?: ""
-            val characterStatus = backStackEntry.arguments?.getString("characterStatus")?.let {
-                URLDecoder.decode(it, "UTF-8")
-            } ?: "Unknown"
-            val characterSpecies = backStackEntry.arguments?.getString("characterSpecies")?.let {
-                URLDecoder.decode(it, "UTF-8")
-            } ?: ""
 
             CharacterDetailScreen(
-                characterId = characterId,
-                characterName = characterName,
-                characterImage = characterImage,
-                characterStatus = characterStatus,
-                characterSpecies = characterSpecies,
                 onNavigateBack = {
                     navController.popBackStack()
                 }

@@ -5,6 +5,7 @@ import com.imad.yassir.rickmorty.core.data.networking.HttpClientFactory
 import com.imad.yassir.rickmorty.rick_morty.domain.CharacterDataSource
 import com.imad.yassir.rickmorty.rick_morty.data.networking.RemoteCharacterDataSource
 import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.CharacterListViewModel
+import com.imad.yassir.rickmorty.rick_morty.presentation.character_details.CharacterDetailsViewModel
 
 import io.ktor.client.engine.cio.CIO
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -17,4 +18,5 @@ val appModule = module {
     singleOf(::RemoteCharacterDataSource).bind<CharacterDataSource>()
 
     viewModelOf(::CharacterListViewModel)
+    viewModelOf(::CharacterDetailsViewModel)
 }
