@@ -1,7 +1,14 @@
 # 🛸 Yassir Rick & Morty Compose App
 
 A modern Rick and Morty character exploration app built using **Jetpack Compose**, **Ktor**, **Koin**, and **Clean Architecture**.  
-Developed as part of the **Yassir Android Engineer recruitment challenge**.
+=======
+
+
+---
+
+## 🎥 Demo
+
+https://github.com/user-attachments/assets/8ee76281-6770-4d35-a2de-091a167b577f
 
 ---
 
@@ -29,12 +36,14 @@ Developed as part of the **Yassir Android Engineer recruitment challenge**.
 | DI           | Koin                  |
 | Network      | Ktor Client           |
 | Language     | Kotlin                |
+=======
+
 
 ---
 
 ## 🧩 Project Structure
 
-```
+
 app/src/main/java/com/imad/yassir/rickmorty/
 ├── core/                           # Core utilities and shared components
 │   ├── data/networking/           # HTTP client and network utilities
@@ -54,7 +63,7 @@ app/src/main/java/com/imad/yassir/rickmorty/
 │       ├── character_list/       # Character list screen
 │       └── character_details/    # Character details screen
 └── MainActivity.kt               # Main activity
-```
+
 
 ---
 
@@ -170,30 +179,21 @@ app/src/main/java/com/imad/yassir/rickmorty/
 
 ---
 
-## 🐛 Error Handling
-
-The app implements comprehensive error handling:
-
-- **Network Errors**: User-friendly error messages
-- **Loading States**: Clear loading indicators
-- **Retry Mechanisms**: Easy retry functionality
-- **Graceful Degradation**: App continues to work even with errors
-
----
 
 ## 📱 Screenshots
 
 *Screenshots will be added here*
 
+
+
+
+
+
 ---
 
-## 🤝 Contributing
+## 🧪 Testing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+Unit and UI tests are structured and modular (not included in this challenge submission but the architecture is test-friendly).
 
 ---
 
@@ -209,3 +209,6 @@ This project is developed as part of the Yassir Android Engineer recruitment cha
 - **Jetpack Compose** team for the amazing UI toolkit
 - **Ktor** team for the excellent networking library
 - **Koin** team for the lightweight DI framework
+=======
+This project is open-source and free to use under the MIT license.
+
