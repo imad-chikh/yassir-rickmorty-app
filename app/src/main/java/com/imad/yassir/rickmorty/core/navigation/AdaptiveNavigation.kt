@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -15,6 +16,7 @@ import com.imad.yassir.rickmorty.rick_morty.presentation.character_details.Chara
 import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.CharacterListEvent
 import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.CharacterListScreen
 import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.CharacterListViewModel
+import com.imad.yassir.rickmorty.rick_morty.presentation.character_list.handleNavigation
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -26,6 +28,9 @@ fun AdaptiveNavigation(
 ) {
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
+    
+    // Create navigation manager
+    val navigationManager = remember { NavigationManager(navController) }
 
     ObserveAsEvents(events = viewModel.events) { event ->
         when (event) {
@@ -38,7 +43,7 @@ fun AdaptiveNavigation(
             }
 
             is CharacterListEvent.NavigateToCharacterDetail -> {
-                navController.navigate("character_detail/${event.characterId}")
+                event.handleNavigation(navigationManager)
             }
 
             is CharacterListEvent.ShowToast -> {
@@ -53,24 +58,27 @@ fun AdaptiveNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = "character_list",
+        startDestination = NavigationRoutes.CHARACTER_LIST,
         modifier = modifier
     ) {
-        composable("character_list") {
+        composable(NavigationRoutes.CHARACTER_LIST) {
             CharacterListScreen(
                 state = state,
                 onAction = viewModel::onAction
             )
         }
 
-        composable("character_detail/{characterId}") { backStackEntry ->
-            val characterId = backStackEntry.arguments?.getString("characterId")?.toIntOrNull() ?: 0
-
-            CharacterDetailScreen(
-                onNavigateBack = {
-                    navController.popBackStack()
-                }
-            )
+        composable(NavigationRoutes.CHARACTER_DETAIL) { backStackEntry ->
+            if (backStackEntry.hasValidCharacterId()) {
+                CharacterDetailScreen(
+                    onNavigateBack = {
+                        navigationManager.navigateBack()
+                    }
+                )
+            } else {
+                // Handle invalid character ID - navigate back or show error
+                navigationManager.navigateBack()
+            }
         }
     }
 }
